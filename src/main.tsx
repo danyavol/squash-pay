@@ -4,16 +4,18 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createTheme, MantineProvider } from "@mantine/core";
 import "./index.scss";
-import App from "./App.tsx";
+import { RouterProvider } from "react-router";
+import { router } from "./router.tsx";
 
 const theme = createTheme({
+  primaryColor: "orange",
   /** Put your mantine theme override here */
 });
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MantineProvider theme={theme}>
-      <App />
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+      <RouterProvider router={router} />
     </MantineProvider>
   </StrictMode>,
 );
