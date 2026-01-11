@@ -1,10 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.scss'
-import App from './App.tsx'
+import "@mantine/core/styles.css";
 
-createRoot(document.getElementById('root')!).render(
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createTheme, MantineProvider } from "@mantine/core";
+import "./index.scss";
+import App from "./App.tsx";
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <MantineProvider theme={theme}>
+      <App />
+    </MantineProvider>
   </StrictMode>,
-)
+);
