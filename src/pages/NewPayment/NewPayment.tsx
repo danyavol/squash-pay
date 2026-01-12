@@ -9,6 +9,7 @@ import {
   Text,
   Stack,
   Accordion,
+  Title,
 } from "@mantine/core";
 import type { PaymentForm } from "../../types/PaymentForm.type.ts";
 import { useMemo } from "react";
@@ -70,6 +71,7 @@ export const NewPayment = () => {
   return (
     <>
       <Flex direction="column" gap="lg" align="stretch">
+        <Title order={2}>New payment</Title>
         <Stack gap="sm">
           <Group gap="sm" grow align="start">
             <NumberInput
