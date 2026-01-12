@@ -12,7 +12,7 @@ import {
   TextInput,
   Menu,
 } from "@mantine/core";
-import { Trash2, UserRoundPlus, EllipsisVertical } from "lucide-react";
+import { Trash2, EllipsisVertical, Plus } from "lucide-react";
 import { useState } from "react";
 import styles from "./Friends.module.scss";
 
@@ -40,13 +40,13 @@ export const Friends = () => {
             addFriend({ name });
             setName("");
           }}
-          leftSection={<UserRoundPlus />}
+          leftSection={<Plus />}
         >
           Add
         </Button>
       </Flex>
 
-      <Flex direction="column" gap="sm">
+      <Flex direction="column-reverse" gap="sm">
         {friends.map((friend) => (
           <Flex gap="xs" align="center">
             <TextInput

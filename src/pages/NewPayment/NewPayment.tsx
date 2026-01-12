@@ -1,6 +1,15 @@
 import { TimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { Button, Flex, NumberInput, Text } from "@mantine/core";
+import {
+  Button,
+  Flex,
+  Modal,
+  NumberInput,
+  Group,
+  Text,
+  Stack,
+  Accordion,
+} from "@mantine/core";
 import type { PaymentForm } from "../../types/PaymentForm.type.ts";
 import { useMemo } from "react";
 import {
@@ -8,6 +17,9 @@ import {
   useFriendsStore,
 } from "../../state/friends-store.ts";
 import { useShallow } from "zustand/react/shallow";
+import { UserRoundPlus } from "lucide-react";
+import { useDisclosure } from "@mantine/hooks";
+import styles from "./NewPayment.module.scss";
 
 const durationPresets = ["00:30", "01:00", "01:30", "02:00", "02:30", "03:00"];
 
@@ -28,6 +40,10 @@ export const NewPayment = () => {
   });
 
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
+  friendsMap;
+
+  const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
 
   const durationInHours = useMemo(() => {
     const isValid = !form.validateField("duration").hasError;
@@ -43,52 +59,107 @@ export const NewPayment = () => {
     return form.values.courtPrice * form.values.courtsNumber * durationInHours;
   }, [form.values.courtPrice, form.values.courtsNumber, durationInHours]);
 
-  const onSubmit = (value: ReturnType<typeof form.getValues>) => {
-    console.log(value);
+  const onSubmit = () => {
+    form.validate();
+
+    if (form.isValid()) {
+      console.log(form.values);
+    }
   };
 
   return (
-    <form onSubmit={form.onSubmit(onSubmit)}>
-      <Flex direction="column" gap="sm" align="start">
-        <Flex gap="sm" align="end">
-          <NumberInput
-            label="Price"
-            description="per court, per hour"
-            decimalScale={2}
-            allowNegative={false}
-            rightSection={"zł"}
-            {...form.getInputProps("courtPrice")}
-          />
-          <NumberInput
-            label="Courts"
-            allowDecimal={false}
-            allowNegative={false}
-            {...form.getInputProps("courtsNumber")}
-          />
-          <TimePicker
-            label="Duration"
-            withDropdown
-            presets={durationPresets}
-            {...form.getInputProps("duration")}
-          />
+    <>
+      <Flex direction="column" gap="lg" align="stretch">
+        <Stack gap="sm">
+          <Group gap="sm" grow align="start">
+            <NumberInput
+              label="Price per court"
+              decimalScale={2}
+              allowNegative={false}
+              rightSection={"zł"}
+              {...form.getInputProps("courtPrice")}
+            />
+            <NumberInput
+              label="Courts"
+              allowDecimal={false}
+              allowNegative={false}
+              {...form.getInputProps("courtsNumber")}
+            />
+            <TimePicker
+              label="Duration"
+              withDropdown
+              presets={durationPresets}
+              {...form.getInputProps("duration")}
+            />
+          </Group>
+
+          <Group gap="xs">
+            <Text c="dimmed" size="sm">
+              Price without discount:{" "}
+            </Text>
+            <Text size="sm">{priceWithoutDiscount} zł</Text>
+          </Group>
+        </Stack>
+
+        <Flex direction="column">
+          <Text size="sm" fw={500}>
+            Friends
+          </Text>
+
+          <Button
+            variant="subtle"
+            size="sm"
+            leftSection={<UserRoundPlus height="60%" />}
+            onClick={openModal}
+          >
+            Select friends
+          </Button>
         </Flex>
 
-        <Text>Price without discount: {priceWithoutDiscount} zł</Text>
+        <Accordion
+          variant="filled"
+          chevronIconSize={14}
+          classNames={{ control: styles.control }}
+        >
+          <Accordion.Item value="1">
+            <Accordion.Control>
+              <Text fw={500} size="sm" className={styles.advancedOptionsTitle}>
+                Advanced options
+              </Text>
+            </Accordion.Control>
+            <Accordion.Panel>
+              <NumberInput
+                label="Multisport discount"
+                decimalScale={2}
+                allowNegative={false}
+                rightSection={"zł"}
+                {...form.getInputProps("multisportDiscount")}
+              />
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
 
-        <NumberInput
-          label="Multisport discount"
-          decimalScale={2}
-          allowNegative={false}
-          rightSection={"zł"}
-          {...form.getInputProps("multisportDiscount")}
-        />
+        <Flex justify="space-between">
+          <Group gap="sm">
+            <Text className={styles.totalPriceText}>Total price:</Text>
+            <Text
+              size="xl"
+              fw="700"
+              variant="gradient"
+              gradient={{ from: "orange", to: "red", deg: 90 }}
+            >
+              {/*  TODO: Take into account discount */}
+              {priceWithoutDiscount} zł
+            </Text>
+          </Group>
 
-        <Text>Players:</Text>
-
-        {JSON.stringify(friendsMap)}
-
-        <Button type="submit">Submit</Button>
+          <Button onClick={onSubmit}>Save</Button>
+        </Flex>
       </Flex>
-    </form>
+
+      <Modal opened={modalOpened} onClose={closeModal} centered>
+        TODO
+      </Modal>
+    </>
   );
 };

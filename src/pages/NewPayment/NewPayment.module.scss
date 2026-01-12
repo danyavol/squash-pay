@@ -1,0 +1,15 @@
+.control {
+  transition: padding 150ms ease;
+
+  &:not([data-active]) {
+    padding: 0;
+  }
+}
+
+.advancedOptionsTitle {
+  color: var(--mantine-color-text);
+}
+
+.totalPriceText {
+  color: var(--mantine-color-bright);
+}
