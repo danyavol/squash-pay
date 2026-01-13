@@ -1,0 +1,12 @@
+.title {
+  line-height: var(--mantine-line-height);
+  display: inline;
+}
+
+.value {
+  flex-grow: 1;
+}
+
+.group > * {
+  height: calc(2.25rem * var(--mantine-scale));
+}

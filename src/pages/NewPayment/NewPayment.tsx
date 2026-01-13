@@ -21,6 +21,7 @@ import { useShallow } from "zustand/react/shallow";
 import { UserRoundPlus } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./NewPayment.module.scss";
+import { NumberIncrementor } from "../../components/NumberIncrementor/NumberIncrementor.tsx";
 
 const durationPresets = ["00:30", "01:00", "01:30", "02:00", "02:30", "03:00"];
 
@@ -60,6 +61,18 @@ export const NewPayment = () => {
     return form.values.courtPrice * form.values.courtsNumber * durationInHours;
   }, [form.values.courtPrice, form.values.courtsNumber, durationInHours]);
 
+  const increaseCourtsNumber = () => {
+    form.setValues((values) => ({
+      courtsNumber: Math.min((values.courtsNumber ?? 0) + 1, 99),
+    }));
+  };
+
+  const decreaseCourtsNumber = () => {
+    form.setValues((values) => ({
+      courtsNumber: Math.max((values.courtsNumber ?? 0) - 1, 0),
+    }));
+  };
+
   const onSubmit = () => {
     form.validate();
 
@@ -81,12 +94,13 @@ export const NewPayment = () => {
               rightSection={"zł"}
               {...form.getInputProps("courtPrice")}
             />
-            <NumberInput
+            <NumberIncrementor
+              value={form.values.courtsNumber}
+              decrease={decreaseCourtsNumber}
+              increase={increaseCourtsNumber}
               label="Courts"
-              allowDecimal={false}
-              allowNegative={false}
-              {...form.getInputProps("courtsNumber")}
             />
+
             <TimePicker
               label="Duration"
               withDropdown
