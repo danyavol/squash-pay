@@ -10,12 +10,11 @@ export default defineConfig({
     svgr(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["icon-192.png", "icon-512.png", "**/*.svg"],
+      includeAssets: ["**/*"],
       manifest: {
         name: "Squash Pay",
         short_name: "Squash Pay",
         description: "Split squash payments and share expenses with friends",
-        background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait-primary",
         icons: [
@@ -23,13 +22,19 @@ export default defineConfig({
             src: "/icon-192.png",
             sizes: "192x192",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "any",
           },
           {
             src: "/icon-512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "any",
+          },
+          {
+            src: "/icon-1024.png",
+            sizes: "1024x1024",
+            type: "image/png",
+            purpose: "any",
           },
         ],
         categories: ["finance", "utilities"],
