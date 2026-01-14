@@ -81,13 +81,17 @@ export const NewPayment = () => {
     useNewPaymentStore.setState({ [key]: value });
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const msg = getMessageForSharing(useNewPaymentStore.getState(), friendsMap);
 
     console.log(msg);
 
-    // TODO: Add success message and error handling
-    void navigator.clipboard.writeText(msg);
+    try {
+      await navigator.clipboard.writeText(msg);
+      alert("Copied to clipboard!");
+    } catch (err) {
+      alert("Failed to copy:" + JSON.stringify(err));
+    }
   };
 
   return (
