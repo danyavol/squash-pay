@@ -15,7 +15,6 @@ export default defineConfig({
         name: "Squash Pay",
         short_name: "Squash Pay",
         description: "Split squash payments and share expenses with friends",
-        theme_color: "#fd7e14",
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait-primary",
