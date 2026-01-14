@@ -10,7 +10,6 @@ import { router } from "./router.tsx";
 
 const theme = createTheme({
   primaryColor: "orange",
-  /** Put your mantine theme override here */
 });
 
 createRoot(document.getElementById("root")!).render(
