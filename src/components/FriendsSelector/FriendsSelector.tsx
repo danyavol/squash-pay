@@ -22,7 +22,7 @@ export const FriendsSelector = () => {
   };
 
   return (
-    <Flex direction="column" justify="stretch">
+    <Flex direction="column-reverse" justify="stretch">
       {allFriends.map((friend) => {
         const isSelected = !!selectedFriends.find(
           (f) => f.friendId === friend.id,

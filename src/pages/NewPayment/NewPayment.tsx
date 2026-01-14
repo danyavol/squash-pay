@@ -92,16 +92,6 @@ export const NewPayment = () => {
         <Title order={2}>New payment</Title>
         <Stack gap="sm">
           <Group gap="sm" grow align="start">
-            <NumberInput
-              label="Price per court"
-              decimalScale={2}
-              allowNegative={false}
-              rightSection={"zł"}
-              value={courtPrice}
-              onChange={(value) =>
-                setValue("courtPrice", typeof value === "string" ? 0 : value)
-              }
-            />
             <NumberIncrementor
               value={courtsNumber}
               decrease={decreaseCourtsNumber}
@@ -195,19 +185,34 @@ export const NewPayment = () => {
               </Text>
             </Accordion.Control>
             <Accordion.Panel>
-              <NumberInput
-                label="Multisport discount"
-                decimalScale={2}
-                allowNegative={false}
-                rightSection={"zł"}
-                value={multisportDiscount}
-                onChange={(value) =>
-                  setValue(
-                    "multisportDiscount",
-                    typeof value === "string" ? 0 : value,
-                  )
-                }
-              />
+              <Group gap="sm" grow align="start">
+                <NumberInput
+                  label="Price per court"
+                  decimalScale={2}
+                  allowNegative={false}
+                  rightSection={"zł"}
+                  value={courtPrice}
+                  onChange={(value) =>
+                    setValue(
+                      "courtPrice",
+                      typeof value === "string" ? 0 : value,
+                    )
+                  }
+                />
+                <NumberInput
+                  label="Multisport discount"
+                  decimalScale={2}
+                  allowNegative={false}
+                  rightSection={"zł"}
+                  value={multisportDiscount}
+                  onChange={(value) =>
+                    setValue(
+                      "multisportDiscount",
+                      typeof value === "string" ? 0 : value,
+                    )
+                  }
+                />
+              </Group>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>

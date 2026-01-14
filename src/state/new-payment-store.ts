@@ -28,9 +28,9 @@ export const durationPresets = [
 ];
 
 export const defaultNewPaymentValues = {
-  courtPrice: 0,
+  courtPrice: 90,
   courtsNumber: 1,
-  multisportDiscount: 0,
+  multisportDiscount: 15,
   duration: durationPresets[1],
   friends: [],
 };
