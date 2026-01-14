@@ -13,3 +13,15 @@
 .totalPriceText {
   color: var(--mantine-color-bright);
 }
+
+.indexHeader {
+  width: calc(2.5rem * var(--mantine-scale));
+}
+
+.multisportHeader {
+  width: calc(8rem * var(--mantine-scale));
+}
+
+.modalBody {
+  padding: 0 0 var(--mantine-spacing-xs) 0;
+}

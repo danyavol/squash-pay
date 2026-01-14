@@ -10,6 +10,7 @@ import {
   Stack,
   Accordion,
   Title,
+  Table,
 } from "@mantine/core";
 import type { PaymentForm } from "../../types/PaymentForm.type.ts";
 import { useMemo } from "react";
@@ -22,18 +23,23 @@ import { UserRoundPlus } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./NewPayment.module.scss";
 import { NumberIncrementor } from "../../components/NumberIncrementor/NumberIncrementor.tsx";
-
-const durationPresets = ["00:30", "01:00", "01:30", "02:00", "02:30", "03:00"];
+import { FriendsSelector } from "../../components/FriendsSelector/FriendsSelector.tsx";
+import {
+  defaultNewPaymentValues,
+  durationPresets,
+  maxMultisports,
+  useNewPaymentStore,
+} from "../../state/new-payment-store.ts";
 
 export const NewPayment = () => {
   const form = useForm<PaymentForm>({
     mode: "controlled",
     initialValues: {
-      courtPrice: 0,
-      courtsNumber: 1,
-      multisportDiscount: 0,
-      duration: durationPresets[1],
-      friends: [],
+      courtPrice: defaultNewPaymentValues.courtPrice,
+      courtsNumber: defaultNewPaymentValues.courtsNumber,
+      multisportDiscount: defaultNewPaymentValues.multisportDiscount,
+      duration: defaultNewPaymentValues.duration,
+      friends: defaultNewPaymentValues.friends,
     },
     validate: {
       duration: (value) =>
@@ -42,7 +48,8 @@ export const NewPayment = () => {
   });
 
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
-  friendsMap;
+  const selectedFriends = useNewPaymentStore((state) => state.friends);
+  const setFriend = useNewPaymentStore((state) => state.setFriend);
 
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
@@ -60,6 +67,14 @@ export const NewPayment = () => {
   const priceWithoutDiscount = useMemo(() => {
     return form.values.courtPrice * form.values.courtsNumber * durationInHours;
   }, [form.values.courtPrice, form.values.courtsNumber, durationInHours]);
+
+  const discountValue = useMemo(
+    () =>
+      selectedFriends.reduce((acc, f) => {
+        return acc + f.multisportsNumber * form.values.multisportDiscount;
+      }, 0),
+    [selectedFriends, form.values.multisportDiscount],
+  );
 
   const increaseCourtsNumber = () => {
     form.setValues((values) => ({
@@ -117,20 +132,62 @@ export const NewPayment = () => {
           </Group>
         </Stack>
 
-        <Flex direction="column">
-          <Text size="sm" fw={500}>
-            Friends
-          </Text>
-
-          <Button
-            variant="subtle"
-            size="sm"
-            leftSection={<UserRoundPlus height="60%" />}
-            onClick={openModal}
-          >
-            Select friends
-          </Button>
-        </Flex>
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th className={styles.indexHeader}>#</Table.Th>
+              <Table.Th>Person</Table.Th>
+              <Table.Th className={styles.multisportHeader}>
+                Multisport
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {selectedFriends.map(({ friendId, multisportsNumber }, index) => (
+              <Table.Tr key={friendId}>
+                <Table.Td>{index + 1}</Table.Td>
+                <Table.Td>
+                  <Text>{friendsMap[friendId].name}</Text>
+                </Table.Td>
+                <Table.Td>
+                  <NumberIncrementor
+                    value={multisportsNumber}
+                    decrease={() =>
+                      setFriend({
+                        friendId,
+                        multisportsNumber: Math.max(multisportsNumber - 1, 0),
+                      })
+                    }
+                    increase={() =>
+                      setFriend({
+                        friendId,
+                        multisportsNumber: Math.min(
+                          multisportsNumber + 1,
+                          maxMultisports,
+                        ),
+                      })
+                    }
+                  />
+                </Table.Td>
+              </Table.Tr>
+            ))}
+            <Table.Tr>
+              <Table.Td colSpan={3}>
+                <Button
+                  variant="subtle"
+                  size="sm"
+                  leftSection={
+                    <UserRoundPlus height="1.25rem" width="1.25rem" />
+                  }
+                  onClick={openModal}
+                  fullWidth
+                >
+                  Select people
+                </Button>
+              </Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
+        </Table>
 
         <Accordion
           variant="filled"
@@ -164,8 +221,7 @@ export const NewPayment = () => {
               variant="gradient"
               gradient={{ from: "orange", to: "red", deg: 90 }}
             >
-              {/*  TODO: Take into account discount */}
-              {priceWithoutDiscount} zł
+              {priceWithoutDiscount - discountValue} zł
             </Text>
           </Group>
 
@@ -173,8 +229,14 @@ export const NewPayment = () => {
         </Flex>
       </Flex>
 
-      <Modal opened={modalOpened} onClose={closeModal} centered>
-        TODO
+      <Modal
+        opened={modalOpened}
+        onClose={closeModal}
+        centered
+        title={<Title order={4}>Select who is playing squash</Title>}
+        classNames={{ body: styles.modalBody }}
+      >
+        <FriendsSelector />
       </Modal>
     </>
   );

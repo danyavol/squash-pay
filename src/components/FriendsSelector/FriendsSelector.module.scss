@@ -1,0 +1,12 @@
+.checkboxCard {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-lg);
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-lg);
+  border-radius: 0;
+
+  &[data-checked] {
+    background-color: var(--mantine-color-orange-light);
+  }
+}
