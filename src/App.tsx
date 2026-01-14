@@ -10,14 +10,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { NavLink, Outlet } from "react-router";
-import { Calculator, BookOpenText, BookUser, Settings } from "lucide-react";
+import { Calculator, BookOpenText, BookUser } from "lucide-react";
 import { ColorSchemeSwitcher } from "./components/ColorSchemeSwitcher.tsx";
 
 const navbarLinks = [
   { to: "/new", label: "New payment", icon: Calculator },
-  { to: "/", label: "Payments", icon: BookOpenText },
+  { to: "/", label: "History", icon: BookOpenText },
   { to: "/friends", label: "Friends", icon: BookUser },
-  { to: "/settings", label: "Settings", icon: Settings },
+  // { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 function App() {

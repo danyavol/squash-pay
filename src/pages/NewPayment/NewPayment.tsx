@@ -1,4 +1,3 @@
-import { TimePicker } from "@mantine/dates";
 import {
   Button,
   Flex,
@@ -10,6 +9,7 @@ import {
   Accordion,
   Title,
   Table,
+  Select,
 } from "@mantine/core";
 import { useMemo } from "react";
 import {
@@ -17,7 +17,7 @@ import {
   useFriendsStore,
 } from "../../state/friends-store.ts";
 import { useShallow } from "zustand/react/shallow";
-import { UserRoundPlus } from "lucide-react";
+import { UserRoundPlus, Split } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./NewPayment.module.scss";
 import { NumberIncrementor } from "../../components/NumberIncrementor/NumberIncrementor.tsx";
@@ -99,12 +99,12 @@ export const NewPayment = () => {
               label="Courts"
             />
 
-            <TimePicker
+            <Select
               label="Duration"
-              withDropdown
-              presets={durationPresets}
+              data={durationPresets}
+              allowDeselect={false}
               value={duration}
-              onChange={(value) => setValue("duration", value)}
+              onChange={(value) => value && setValue("duration", value)}
             />
           </Group>
 
@@ -230,7 +230,12 @@ export const NewPayment = () => {
             </Text>
           </Group>
 
-          <Button onClick={onSubmit}>Save</Button>
+          <Button
+            onClick={onSubmit}
+            leftSection={<Split height="1.25rem" width="1.25 rem" />}
+          >
+            Split price
+          </Button>
         </Flex>
       </Flex>
 
