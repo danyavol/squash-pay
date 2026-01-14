@@ -18,7 +18,7 @@ import {
 } from "../../state/friends-store.ts";
 import { useShallow } from "zustand/react/shallow";
 import { UserRoundPlus, Split } from "lucide-react";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useClipboard } from "@mantine/hooks";
 import styles from "./NewPayment.module.scss";
 import { NumberIncrementor } from "../../components/NumberIncrementor/NumberIncrementor.tsx";
 import { FriendsSelector } from "../../components/FriendsSelector/FriendsSelector.tsx";
@@ -33,6 +33,7 @@ import { getMessageForSharing } from "../../services/share-message.service.ts";
 
 export const NewPayment = () => {
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
+  const clipboard = useClipboard({ timeout: 2000 });
 
   const {
     courtsNumber,
@@ -81,17 +82,10 @@ export const NewPayment = () => {
     useNewPaymentStore.setState({ [key]: value });
   }
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     const msg = getMessageForSharing(useNewPaymentStore.getState(), friendsMap);
-
     console.log(msg);
-
-    try {
-      await navigator.clipboard.writeText(msg);
-      alert("Copied to clipboard!");
-    } catch (err) {
-      alert("Failed to copy:" + JSON.stringify(err));
-    }
+    clipboard.copy(msg);
   };
 
   return (
@@ -241,10 +235,22 @@ export const NewPayment = () => {
           <Button
             onClick={onSubmit}
             leftSection={<Split height="1.25rem" width="1.25rem" />}
+            color={
+              clipboard.copied ? "teal" : clipboard.error ? "red" : undefined
+            }
           >
-            Split price
+            {clipboard.copied
+              ? "Copied!"
+              : clipboard.error
+                ? "Failed to copy"
+                : "Split price"}
           </Button>
         </Flex>
+        {clipboard.error && (
+          <Text size="xs" c="red">
+            Error: {clipboard.error?.message || JSON.stringify(clipboard.error)}
+          </Text>
+        )}
       </Flex>
 
       <Modal
