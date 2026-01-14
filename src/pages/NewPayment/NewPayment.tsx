@@ -1,5 +1,4 @@
 import { TimePicker } from "@mantine/dates";
-import { useForm } from "@mantine/form";
 import {
   Button,
   Flex,
@@ -12,7 +11,6 @@ import {
   Title,
   Table,
 } from "@mantine/core";
-import type { PaymentForm } from "../../types/PaymentForm.type.ts";
 import { useMemo } from "react";
 import {
   selectFriendsMap,
@@ -25,75 +23,67 @@ import styles from "./NewPayment.module.scss";
 import { NumberIncrementor } from "../../components/NumberIncrementor/NumberIncrementor.tsx";
 import { FriendsSelector } from "../../components/FriendsSelector/FriendsSelector.tsx";
 import {
-  defaultNewPaymentValues,
   durationPresets,
   maxMultisports,
+  type NewPaymentStore,
   useNewPaymentStore,
 } from "../../state/new-payment-store.ts";
 
 export const NewPayment = () => {
-  const form = useForm<PaymentForm>({
-    mode: "controlled",
-    initialValues: {
-      courtPrice: defaultNewPaymentValues.courtPrice,
-      courtsNumber: defaultNewPaymentValues.courtsNumber,
-      multisportDiscount: defaultNewPaymentValues.multisportDiscount,
-      duration: defaultNewPaymentValues.duration,
-      friends: defaultNewPaymentValues.friends,
-    },
-    validate: {
-      duration: (value) =>
-        durationPresets.includes(value) ? null : "Pick valid duration",
-    },
-  });
-
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
-  const selectedFriends = useNewPaymentStore((state) => state.friends);
-  const setFriend = useNewPaymentStore((state) => state.setFriend);
+
+  const {
+    courtsNumber,
+    courtPrice,
+    multisportDiscount,
+    duration,
+    friends: selectedFriends,
+    setFriend,
+  } = useNewPaymentStore();
 
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
 
   const durationInHours = useMemo(() => {
-    const isValid = !form.validateField("duration").hasError;
+    const index = durationPresets.findIndex((v) => v === duration);
 
-    const index = durationPresets.findIndex((v) => v === form.values.duration);
-
-    if (!isValid || index < 0) return 0;
-
-    return (index + 1) * 0.5;
-  }, [form.values.duration]);
+    if (index < 0) return 0;
+    else return (index + 1) * 0.5;
+  }, [duration]);
 
   const priceWithoutDiscount = useMemo(() => {
-    return form.values.courtPrice * form.values.courtsNumber * durationInHours;
-  }, [form.values.courtPrice, form.values.courtsNumber, durationInHours]);
+    return courtPrice * courtsNumber * durationInHours;
+  }, [courtPrice, courtsNumber, durationInHours]);
 
   const discountValue = useMemo(
     () =>
       selectedFriends.reduce((acc, f) => {
-        return acc + f.multisportsNumber * form.values.multisportDiscount;
+        return acc + f.multisportsNumber * multisportDiscount;
       }, 0),
-    [selectedFriends, form.values.multisportDiscount],
+    [selectedFriends, multisportDiscount],
   );
 
   const increaseCourtsNumber = () => {
-    form.setValues((values) => ({
-      courtsNumber: Math.min((values.courtsNumber ?? 0) + 1, 99),
+    useNewPaymentStore.setState((state) => ({
+      courtsNumber: Math.min((state.courtsNumber ?? 0) + 1, 99),
     }));
   };
 
   const decreaseCourtsNumber = () => {
-    form.setValues((values) => ({
-      courtsNumber: Math.max((values.courtsNumber ?? 0) - 1, 0),
+    useNewPaymentStore.setState((state) => ({
+      courtsNumber: Math.max((state.courtsNumber ?? 0) - 1, 0),
     }));
   };
 
-  const onSubmit = () => {
-    form.validate();
+  function setValue<T extends keyof NewPaymentStore>(
+    key: T,
+    value: NewPaymentStore[T],
+  ) {
+    useNewPaymentStore.setState({ [key]: value });
+  }
 
-    if (form.isValid()) {
-      console.log(form.values);
-    }
+  const onSubmit = () => {
+    console.log(useNewPaymentStore());
   };
 
   return (
@@ -107,10 +97,13 @@ export const NewPayment = () => {
               decimalScale={2}
               allowNegative={false}
               rightSection={"zł"}
-              {...form.getInputProps("courtPrice")}
+              value={courtPrice}
+              onChange={(value) =>
+                setValue("courtPrice", typeof value === "string" ? 0 : value)
+              }
             />
             <NumberIncrementor
-              value={form.values.courtsNumber}
+              value={courtsNumber}
               decrease={decreaseCourtsNumber}
               increase={increaseCourtsNumber}
               label="Courts"
@@ -120,7 +113,8 @@ export const NewPayment = () => {
               label="Duration"
               withDropdown
               presets={durationPresets}
-              {...form.getInputProps("duration")}
+              value={duration}
+              onChange={(value) => setValue("duration", value)}
             />
           </Group>
 
@@ -206,7 +200,13 @@ export const NewPayment = () => {
                 decimalScale={2}
                 allowNegative={false}
                 rightSection={"zł"}
-                {...form.getInputProps("multisportDiscount")}
+                value={multisportDiscount}
+                onChange={(value) =>
+                  setValue(
+                    "multisportDiscount",
+                    typeof value === "string" ? 0 : value,
+                  )
+                }
               />
             </Accordion.Panel>
           </Accordion.Item>

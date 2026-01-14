@@ -6,7 +6,7 @@ type PaymentFriend = {
   multisportsNumber: number;
 };
 
-type NewPaymentStore = {
+export type NewPaymentStore = {
   courtPrice: number;
   courtsNumber: number;
   multisportDiscount: number;
