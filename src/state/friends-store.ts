@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Friend = {
+export type Friend = {
   id: number;
   isDeleted: boolean;
 } & FriendCreationAttributes;

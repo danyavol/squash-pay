@@ -25,9 +25,11 @@ import { FriendsSelector } from "../../components/FriendsSelector/FriendsSelecto
 import {
   durationPresets,
   maxMultisports,
-  type NewPaymentStore,
+  type PaymentData,
   useNewPaymentStore,
 } from "../../state/new-payment-store.ts";
+import { getDurationInHours } from "../../services/duration.service.ts";
+import { getMessageForSharing } from "../../services/share-message.service.ts";
 
 export const NewPayment = () => {
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
@@ -45,10 +47,7 @@ export const NewPayment = () => {
     useDisclosure(false);
 
   const durationInHours = useMemo(() => {
-    const index = durationPresets.findIndex((v) => v === duration);
-
-    if (index < 0) return 0;
-    else return (index + 1) * 0.5;
+    return getDurationInHours(duration);
   }, [duration]);
 
   const priceWithoutDiscount = useMemo(() => {
@@ -75,15 +74,20 @@ export const NewPayment = () => {
     }));
   };
 
-  function setValue<T extends keyof NewPaymentStore>(
+  function setValue<T extends keyof PaymentData>(
     key: T,
-    value: NewPaymentStore[T],
+    value: PaymentData[T],
   ) {
     useNewPaymentStore.setState({ [key]: value });
   }
 
   const onSubmit = () => {
-    console.log(useNewPaymentStore());
+    const msg = getMessageForSharing(useNewPaymentStore.getState(), friendsMap);
+
+    console.log(msg);
+
+    // TODO: Add success message and error handling
+    void navigator.clipboard.writeText(msg);
   };
 
   return (
@@ -232,7 +236,7 @@ export const NewPayment = () => {
 
           <Button
             onClick={onSubmit}
-            leftSection={<Split height="1.25rem" width="1.25 rem" />}
+            leftSection={<Split height="1.25rem" width="1.25rem" />}
           >
             Split price
           </Button>

@@ -6,12 +6,15 @@ type PaymentFriend = {
   multisportsNumber: number;
 };
 
-export type NewPaymentStore = {
+export type PaymentData = {
   courtPrice: number;
   courtsNumber: number;
   multisportDiscount: number;
   duration: string;
   friends: PaymentFriend[];
+};
+
+export type NewPaymentStore = PaymentData & {
   resetValues(): void;
   removeFriend(friendId: number): void;
   addFriend(friend: PaymentFriend): void;
