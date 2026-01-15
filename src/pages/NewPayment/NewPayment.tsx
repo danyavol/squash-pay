@@ -84,6 +84,10 @@ export const NewPayment = () => {
 
   const onSubmit = () => {
     const msg = getMessageForSharing(useNewPaymentStore.getState(), friendsMap);
+
+    void navigator.share({
+      text: msg,
+    });
     console.log(msg);
     clipboard.copy(msg);
   };
