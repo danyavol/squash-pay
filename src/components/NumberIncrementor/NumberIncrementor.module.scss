@@ -7,6 +7,12 @@
   flex-grow: 1;
 }
 
-.group > * {
-  height: calc(2.25rem * var(--mantine-scale));
+.group {
+  &.lg > * {
+    height: calc(2.25rem * var(--mantine-scale));
+  }
+
+  &.md > * {
+    height: calc(1.875rem * var(--mantine-scale));
+  }
 }

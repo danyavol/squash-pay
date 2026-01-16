@@ -7,6 +7,7 @@ type NumberIncrementorProps = {
   decrease: () => void;
   increase: () => void;
   label?: string;
+  size?: "lg" | "md";
 };
 
 export const NumberIncrementor = ({
@@ -14,6 +15,7 @@ export const NumberIncrementor = ({
   decrease,
   increase,
   label,
+  size = "lg",
 }: NumberIncrementorProps) => {
   return (
     <div>
@@ -22,18 +24,18 @@ export const NumberIncrementor = ({
           {label}
         </Text>
       )}
-      <ActionIcon.Group className={styles.group}>
-        <ActionIcon variant="default" size="lg" c="dimmed" onClick={decrease}>
+      <ActionIcon.Group className={`${styles.group} ${styles[size]}`}>
+        <ActionIcon variant="default" size={size} c="dimmed" onClick={decrease}>
           <Minus size={18} />
         </ActionIcon>
         <ActionIcon.GroupSection
           variant="default"
-          size="lg"
+          size={size}
           className={styles.value}
         >
           <Text size="sm">{value}</Text>
         </ActionIcon.GroupSection>
-        <ActionIcon variant="default" size="lg" c="dimmed" onClick={increase}>
+        <ActionIcon variant="default" size={size} c="dimmed" onClick={increase}>
           <Plus size={18} />
         </ActionIcon>
       </ActionIcon.Group>

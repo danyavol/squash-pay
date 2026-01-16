@@ -29,7 +29,10 @@ import {
   useNewPaymentStore,
 } from "../../state/new-payment-store.ts";
 import { getDurationInHours } from "../../services/duration.service.ts";
-import { getMessageForSharing } from "../../services/share-message.service.ts";
+import {
+  splitPayment,
+  getMessageForSharing,
+} from "../../services/split-payment.service.ts";
 
 export const NewPayment = () => {
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
@@ -63,6 +66,18 @@ export const NewPayment = () => {
     [selectedFriends, multisportDiscount],
   );
 
+  const splitResults = useMemo(
+    () =>
+      splitPayment({
+        courtsNumber,
+        duration,
+        friends: selectedFriends,
+        courtPrice,
+        multisportDiscount,
+      }),
+    [courtsNumber, duration, selectedFriends, courtPrice, multisportDiscount],
+  );
+
   const increaseCourtsNumber = () => {
     useNewPaymentStore.setState((state) => ({
       courtsNumber: Math.min((state.courtsNumber ?? 0) + 1, 99),
@@ -83,7 +98,7 @@ export const NewPayment = () => {
   }
 
   const onSubmit = () => {
-    const msg = getMessageForSharing(useNewPaymentStore.getState(), friendsMap);
+    const msg = getMessageForSharing(splitResults, friendsMap);
 
     void navigator.share({
       text: msg,
@@ -122,7 +137,7 @@ export const NewPayment = () => {
           </Group>
         </Stack>
 
-        <Table>
+        <Table withRowBorders={false} className={styles.friendsTable}>
           <Table.Thead>
             <Table.Tr>
               <Table.Th className={styles.indexHeader}>#</Table.Th>
@@ -130,6 +145,7 @@ export const NewPayment = () => {
               <Table.Th className={styles.multisportHeader}>
                 Multisport
               </Table.Th>
+              <Table.Th className={styles.priceHeader}>Price</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -141,6 +157,7 @@ export const NewPayment = () => {
                 </Table.Td>
                 <Table.Td>
                   <NumberIncrementor
+                    size="md"
                     value={multisportsNumber}
                     decrease={() =>
                       setFriend({
@@ -159,10 +176,13 @@ export const NewPayment = () => {
                     }
                   />
                 </Table.Td>
+                <Table.Td>
+                  <Text>{splitResults[index].amount} zł</Text>
+                </Table.Td>
               </Table.Tr>
             ))}
             <Table.Tr>
-              <Table.Td colSpan={3}>
+              <Table.Td colSpan={4}>
                 <Button
                   variant="subtle"
                   size="sm"
@@ -174,6 +194,21 @@ export const NewPayment = () => {
                 >
                   Select people
                 </Button>
+              </Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Td colSpan={3}>
+                <Text className={styles.totalPriceText}>Total price:</Text>
+              </Table.Td>
+              <Table.Td>
+                <Text
+                  size="xl"
+                  fw="700"
+                  variant="gradient"
+                  gradient={{ from: "orange", to: "red", deg: 90 }}
+                >
+                  {priceWithoutDiscount - discountValue} zł
+                </Text>
               </Table.Td>
             </Table.Tr>
           </Table.Tbody>
@@ -223,19 +258,7 @@ export const NewPayment = () => {
           </Accordion.Item>
         </Accordion>
 
-        <Flex justify="space-between">
-          <Group gap="sm">
-            <Text className={styles.totalPriceText}>Total price:</Text>
-            <Text
-              size="xl"
-              fw="700"
-              variant="gradient"
-              gradient={{ from: "orange", to: "red", deg: 90 }}
-            >
-              {priceWithoutDiscount - discountValue} zł
-            </Text>
-          </Group>
-
+        <Flex justify="end">
           <Button
             onClick={onSubmit}
             leftSection={<Split height="1.25rem" width="1.25rem" />}
@@ -247,7 +270,7 @@ export const NewPayment = () => {
               ? "Copied!"
               : clipboard.error
                 ? "Failed to copy"
-                : "Split price"}
+                : "Save & share"}
           </Button>
         </Flex>
         {clipboard.error && (

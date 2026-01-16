@@ -14,12 +14,29 @@
   color: var(--mantine-color-bright);
 }
 
-.indexHeader {
-  width: calc(2.5rem * var(--mantine-scale));
-}
+$border-styles: calc(0.0625rem * var(--mantine-scale)) solid
+  var(--table-border-color);
 
-.multisportHeader {
-  width: calc(8rem * var(--mantine-scale));
+.friendsTable {
+  thead {
+    border-bottom: $border-styles;
+  }
+
+  tbody tr:last-child {
+    border-top: $border-styles;
+  }
+
+  .indexHeader {
+    width: calc(2.5rem * var(--mantine-scale));
+  }
+
+  .multisportHeader {
+    width: calc(6.75rem * var(--mantine-scale));
+  }
+
+  .priceHeader {
+    width: calc(6rem * var(--mantine-scale));
+  }
 }
 
 .modalBody {
