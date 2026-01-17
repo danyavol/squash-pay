@@ -1,3 +1,27 @@
 a {
   text-decoration: none;
 }
+
+.mantine-Notification-root {
+  background-color: var(
+    --notification-color,
+    var(--mantine-primary-color-filled)
+  );
+
+  &::before {
+    background-color: var(--mantine-color-white);
+  }
+
+  .mantine-Notification-title,
+  .mantine-Notification-description {
+    color: var(--mantine-color-white);
+  }
+
+  .mantine-Notification-closeButton {
+    color: var(--mantine-color-white);
+
+    @mixin hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

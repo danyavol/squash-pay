@@ -17,8 +17,8 @@ import {
   useFriendsStore,
 } from "../../state/friends-store.ts";
 import { useShallow } from "zustand/react/shallow";
-import { UserRoundPlus, Split } from "lucide-react";
-import { useDisclosure, useClipboard } from "@mantine/hooks";
+import { UserRoundPlus } from "lucide-react";
+import { useDisclosure } from "@mantine/hooks";
 import styles from "./NewPayment.module.scss";
 import { NumberIncrementor } from "../../components/NumberIncrementor/NumberIncrementor.tsx";
 import { FriendsSelector } from "../../components/FriendsSelector/FriendsSelector.tsx";
@@ -34,10 +34,10 @@ import {
   getMessageForSharing,
 } from "../../services/split-payment.service.ts";
 import { isMobileDevice } from "../../services/is-mobile-device.service.ts";
+import { notifications } from "@mantine/notifications";
 
 export const NewPayment = () => {
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
-  const clipboard = useClipboard({ timeout: 2000 });
 
   const {
     courtsNumber,
@@ -101,13 +101,35 @@ export const NewPayment = () => {
   const onSubmit = () => {
     const msg = getMessageForSharing(splitResults, friendsMap);
 
-    if (isMobileDevice()) {
-      void navigator.share({
-        text: msg,
-      });
+    if (isMobileDevice) {
+      navigator
+        .share({
+          text: msg,
+        })
+        .then(() => afterSave("Payment saved successfully!"))
+        .catch((e) => failedToSave(e, "Failed to share!"));
     } else {
-      clipboard.copy(msg);
+      navigator.clipboard
+        .writeText(msg)
+        .then(() => afterSave("Payment saved and copied to clipboard!"))
+        .catch((e) => failedToSave(e, "Failed to copy to clipboard!"));
     }
+  };
+
+  const afterSave = (message: string) => {
+    notifications.show({
+      message,
+      color: "green",
+    });
+  };
+
+  const failedToSave = (e: Error, title: string) => {
+    notifications.show({
+      title,
+      message: `${e?.name ? e.name + ": " : ""}${e?.message}`,
+      color: "red",
+      autoClose: false,
+    });
   };
 
   return (
@@ -262,25 +284,10 @@ export const NewPayment = () => {
         </Accordion>
 
         <Flex justify="end">
-          <Button
-            onClick={onSubmit}
-            leftSection={<Split height="1.25rem" width="1.25rem" />}
-            color={
-              clipboard.copied ? "teal" : clipboard.error ? "red" : undefined
-            }
-          >
-            {clipboard.copied
-              ? "Copied!"
-              : clipboard.error
-                ? "Failed to copy"
-                : "Save & share"}
+          <Button onClick={onSubmit}>
+            {isMobileDevice ? "Save & share" : "Save & copy"}
           </Button>
         </Flex>
-        {clipboard.error && (
-          <Text size="xs" c="red">
-            Error: {clipboard.error?.message || JSON.stringify(clipboard.error)}
-          </Text>
-        )}
       </Flex>
 
       <Modal

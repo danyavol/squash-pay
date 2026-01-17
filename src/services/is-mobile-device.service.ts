@@ -1,5 +1,3 @@
 import { isMobile } from "is-mobile";
 
-export function isMobileDevice() {
-  return isMobile({ tablet: true });
-}
+export const isMobileDevice = isMobile({ tablet: true });
