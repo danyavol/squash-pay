@@ -48,7 +48,7 @@ export const Friends = () => {
 
       <Flex direction="column-reverse" gap="sm">
         {friends.map((friend) => (
-          <Flex gap="xs" align="center">
+          <Flex key={friend.id} gap="xs" align="center">
             <TextInput
               className={styles.friendName}
               value={friend.name}

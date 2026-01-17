@@ -1,0 +1,39 @@
+.navigationBarRoot {
+  height: 64px;
+
+  .tabRoot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+
+    &.active {
+      .tabIcon {
+        background-color: var(--mantine-primary-color-light);
+        color: var(--mantine-primary-color-filled);
+      }
+
+      .tabTitle {
+        color: var(--mantine-primary-color-light-color);
+      }
+    }
+
+    .tabIcon {
+      display: flex;
+      color: var(--mantine-color-text);
+      padding: 4px 16px;
+      border-radius: 32px;
+
+      > * {
+        height: 24px;
+        width: 24px;
+      }
+    }
+
+    .tabTitle {
+      color: var(--mantine-color-text);
+      font-weight: 500;
+      line-height: 1;
+    }
+  }
+}
