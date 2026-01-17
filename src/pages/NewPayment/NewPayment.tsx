@@ -33,6 +33,7 @@ import {
   splitPayment,
   getMessageForSharing,
 } from "../../services/split-payment.service.ts";
+import { isMobileDevice } from "../../services/is-mobile-device.service.ts";
 
 export const NewPayment = () => {
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
@@ -100,11 +101,13 @@ export const NewPayment = () => {
   const onSubmit = () => {
     const msg = getMessageForSharing(splitResults, friendsMap);
 
-    void navigator.share({
-      text: msg,
-    });
-    console.log(msg);
-    clipboard.copy(msg);
+    if (isMobileDevice()) {
+      void navigator.share({
+        text: msg,
+      });
+    } else {
+      clipboard.copy(msg);
+    }
   };
 
   return (

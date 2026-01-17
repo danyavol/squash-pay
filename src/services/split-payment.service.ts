@@ -25,12 +25,10 @@ export function splitPayment(
   const basePricePerPerson = totalPrice / friends.length;
 
   return friends.map(({ friendId, multisportsNumber }) => {
-    const amount = basePricePerPerson - multisportsNumber * multisportDiscount;
-    // TODO: What if discount is greater than basePerPerson? E.g.:
-    // Total - 35
-    // Даник (3ms) - -13
-    // Глеб (1ms) - 17
-    // Настя (0ms) - 32
+    const amount = Math.max(
+      basePricePerPerson - multisportsNumber * multisportDiscount,
+      0,
+    );
 
     return {
       friendId,
