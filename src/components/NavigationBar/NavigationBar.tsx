@@ -40,7 +40,9 @@ export const NavigationBar = ({ onVisibilityChange }: NavigationBarProps) => {
             <div className={styles.tabIcon}>
               {isActive ? tab.iconActive : tab.icon}
             </div>
-            <Text className={styles.tabTitle}>{tab.title}</Text>
+            <Text className={styles.tabTitle} size="sm">
+              {tab.title}
+            </Text>
           </NavLink>
         );
       })}
