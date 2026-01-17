@@ -3,15 +3,7 @@ import {
   useFriendsStore,
 } from "../../state/friends-store.ts";
 import { useShallow } from "zustand/react/shallow";
-import {
-  ActionIcon,
-  Button,
-  Title,
-  Text,
-  Flex,
-  TextInput,
-  Menu,
-} from "@mantine/core";
+import { ActionIcon, Button, Text, Flex, TextInput, Menu } from "@mantine/core";
 import { Trash2, EllipsisVertical, Plus } from "lucide-react";
 import { useState } from "react";
 import styles from "./Friends.module.scss";
@@ -26,8 +18,6 @@ export const Friends = () => {
 
   return (
     <Flex direction="column" gap="md">
-      <Title order={2}>My friends:</Title>
-
       <Flex gap="sm">
         <TextInput
           className={styles.friendName}

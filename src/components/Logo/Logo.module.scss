@@ -1,0 +1,18 @@
+.icon {
+  color: var(--mantine-primary-color-filled);
+}
+
+.title {
+  color: var(--mantine-color-dark-9);
+  font-weight: 600;
+
+  span {
+    color: var(--mantine-primary-color-filled);
+  }
+}
+
+[data-mantine-color-scheme="dark"] {
+  .title {
+    color: var(--mantine-color-gray-0);
+  }
+}
