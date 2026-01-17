@@ -1,11 +1,11 @@
 .navigationBarRoot {
-  height: 64px;
+  height: calc(4rem * var(--mantine-scale));
 
   .tabRoot {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: calc(0.25rem * var(--mantine-scale));
 
     &.active {
       .tabIcon {
@@ -21,12 +21,13 @@
     .tabIcon {
       display: flex;
       color: var(--mantine-color-text);
-      padding: 4px 16px;
-      border-radius: 32px;
+      padding: calc(0.25rem * var(--mantine-scale))
+        calc(1rem * var(--mantine-scale));
+      border-radius: calc(2rem * var(--mantine-scale));
 
       > * {
-        height: 24px;
-        width: 24px;
+        height: calc(1.5rem * var(--mantine-scale));
+        width: calc(1.5rem * var(--mantine-scale));
       }
     }
 
