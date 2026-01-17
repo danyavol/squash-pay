@@ -5,7 +5,7 @@ import {
 import { useShallow } from "zustand/react/shallow";
 import { ActionIcon, Button, Text, Flex, TextInput, Menu } from "@mantine/core";
 import { Trash2, EllipsisVertical, Plus } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./Friends.module.scss";
 
 export const Friends = () => {
@@ -13,22 +13,37 @@ export const Friends = () => {
   const updateFriend = useFriendsStore((state) => state.updateFriend);
   const deleteFriend = useFriendsStore((state) => state.deleteFriend);
   const addFriend = useFriendsStore((state) => state.addFriend);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
 
   const [name, setName] = useState("");
+
+  const onAddFriend = () => {
+    addFriend({ name: name.trim() });
+    setName("");
+  };
 
   return (
     <Flex direction="column" gap="md">
       <Flex gap="sm">
         <TextInput
           className={styles.friendName}
+          ref={nameInputRef}
           value={name}
           placeholder="New friend name"
           onChange={(event) => setName(event.currentTarget.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && name.trim()) {
+              onAddFriend();
+            }
+          }}
         />
         <Button
           onClick={() => {
-            addFriend({ name });
-            setName("");
+            if (name.trim()) {
+              onAddFriend();
+            } else {
+              nameInputRef.current?.focus?.();
+            }
           }}
           leftSection={<Plus />}
         >

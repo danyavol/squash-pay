@@ -23,12 +23,13 @@ export const FriendsSelector = () => {
 
   return (
     <Flex direction="column-reverse" justify="stretch">
-      {allFriends.map((friend) => {
+      {allFriends.map((friend, index) => {
         const isSelected = !!selectedFriends.find(
           (f) => f.friendId === friend.id,
         );
         return (
           <Checkbox.Card
+            key={index}
             checked={isSelected}
             onClick={() => toggleFriend(friend.id, !isSelected)}
             className={styles.checkboxCard}

@@ -7,7 +7,6 @@ import {
   Text,
   Stack,
   Accordion,
-  Title,
   Table,
   Select,
 } from "@mantine/core";
@@ -246,7 +245,7 @@ export const NewPayment = () => {
           <Accordion.Item value="1">
             <Accordion.Control>
               <Text fw={500} size="sm" className={styles.advancedOptionsTitle}>
-                Advanced options
+                Other options
               </Text>
             </Accordion.Control>
             <Accordion.Panel>
@@ -293,7 +292,7 @@ export const NewPayment = () => {
         opened={modalOpened}
         onClose={closeModal}
         centered
-        title={<Title order={4}>Select who is playing squash</Title>}
+        title="Select who is playing squash"
         classNames={{ body: styles.modalBody }}
       >
         <FriendsSelector />
