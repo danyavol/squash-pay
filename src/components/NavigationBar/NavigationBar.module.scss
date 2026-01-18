@@ -11,6 +11,8 @@
       .tabIcon {
         background-color: var(--mantine-primary-color-light);
         color: var(--mantine-primary-color-filled);
+        padding-left: calc(1rem * var(--mantine-scale));
+        padding-right: calc(1rem * var(--mantine-scale));
       }
 
       .tabTitle {
@@ -21,9 +23,9 @@
     .tabIcon {
       display: flex;
       color: var(--mantine-color-text);
-      padding: calc(0.25rem * var(--mantine-scale))
-        calc(1rem * var(--mantine-scale));
+      padding: calc(0.25rem * var(--mantine-scale));
       border-radius: calc(2rem * var(--mantine-scale));
+      transition: padding 0.2s ease;
 
       > * {
         height: calc(1.5rem * var(--mantine-scale));
