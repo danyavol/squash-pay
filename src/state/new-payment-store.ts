@@ -12,6 +12,7 @@ export type PaymentData = {
   multisportDiscount: number;
   duration: string;
   friends: PaymentFriend[];
+  date: string | null;
 };
 
 export type NewPaymentStore = PaymentData & {
@@ -36,6 +37,7 @@ export const defaultNewPaymentValues = {
   multisportDiscount: 15,
   duration: durationPresets[1],
   friends: [],
+  date: null,
 };
 
 export const maxMultisports = 4;
@@ -45,7 +47,10 @@ export const useNewPaymentStore = create<NewPaymentStore>()(
     (set) => ({
       ...defaultNewPaymentValues,
       resetValues: () => {
-        set({ ...defaultNewPaymentValues });
+        // Do not reset court price and multisport discount
+        const { courtPrice, multisportDiscount, ...restDefaultOptions } =
+          defaultNewPaymentValues;
+        set({ ...restDefaultOptions });
       },
       removeFriend: (friendId) => {
         set((state) => ({

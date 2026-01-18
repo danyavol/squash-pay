@@ -34,8 +34,13 @@ import {
 } from "../../services/split-payment.service.ts";
 import { isMobileDevice } from "../../services/is-mobile-device.service.ts";
 import { notifications } from "@mantine/notifications";
+import { usePaymentsStore } from "../../state/payments-store.ts";
+import { DatePickerInput } from "@mantine/dates";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router";
 
 export const NewPayment = () => {
+  const navigate = useNavigate();
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
 
   const {
@@ -45,6 +50,8 @@ export const NewPayment = () => {
     duration,
     friends: selectedFriends,
     setFriend,
+    date,
+    resetValues,
   } = useNewPaymentStore();
 
   const [modalOpened, { open: openModal, close: closeModal }] =
@@ -120,6 +127,23 @@ export const NewPayment = () => {
       message,
       color: "green",
     });
+
+    const createdPayment: PaymentData = {
+      courtPrice,
+      multisportDiscount,
+      duration,
+      friends: selectedFriends,
+      courtsNumber,
+      date: date ?? dayjs().format("YYYY-MM-DD"),
+    };
+
+    usePaymentsStore.setState((state) => ({
+      payments: [...state.payments, createdPayment],
+    }));
+
+    resetValues();
+
+    navigate("/");
   };
 
   const failedToSave = (e: Error, title: string) => {
@@ -249,34 +273,44 @@ export const NewPayment = () => {
               </Text>
             </Accordion.Control>
             <Accordion.Panel>
-              <Group gap="sm" grow align="start">
-                <NumberInput
-                  label="Price per court"
-                  decimalScale={2}
-                  allowNegative={false}
-                  rightSection={"zł"}
-                  value={courtPrice}
-                  onChange={(value) =>
-                    setValue(
-                      "courtPrice",
-                      typeof value === "string" ? 0 : value,
-                    )
-                  }
+              <Stack gap="sm">
+                <DatePickerInput
+                  label="Date"
+                  placeholder="Select a date"
+                  clearable={true}
+                  value={date}
+                  onChange={(value) => setValue("date", value)}
                 />
-                <NumberInput
-                  label="Multisport discount"
-                  decimalScale={2}
-                  allowNegative={false}
-                  rightSection={"zł"}
-                  value={multisportDiscount}
-                  onChange={(value) =>
-                    setValue(
-                      "multisportDiscount",
-                      typeof value === "string" ? 0 : value,
-                    )
-                  }
-                />
-              </Group>
+
+                <Group gap="sm" grow align="start">
+                  <NumberInput
+                    label="Price per court"
+                    decimalScale={2}
+                    allowNegative={false}
+                    rightSection={"zł"}
+                    value={courtPrice}
+                    onChange={(value) =>
+                      setValue(
+                        "courtPrice",
+                        typeof value === "string" ? 0 : value,
+                      )
+                    }
+                  />
+                  <NumberInput
+                    label="Multisport discount"
+                    decimalScale={2}
+                    allowNegative={false}
+                    rightSection={"zł"}
+                    value={multisportDiscount}
+                    onChange={(value) =>
+                      setValue(
+                        "multisportDiscount",
+                        typeof value === "string" ? 0 : value,
+                      )
+                    }
+                  />
+                </Group>
+              </Stack>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>

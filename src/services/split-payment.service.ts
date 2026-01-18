@@ -18,7 +18,7 @@ export function splitPayment(
     friends,
     courtPrice,
     multisportDiscount,
-  }: PaymentData,
+  }: Omit<PaymentData, "date">,
   { roundPrice = true }: Options = {},
 ): SplitResult[] {
   const totalPrice = courtPrice * courtsNumber * getDurationInHours(duration);
