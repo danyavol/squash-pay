@@ -1,18 +1,24 @@
-import { ActionIcon, useMantineColorScheme } from "@mantine/core";
+import { Switch, useMantineColorScheme } from "@mantine/core";
 import { Sun, Moon } from "lucide-react";
 
 export const ColorSchemeSwitcher = () => {
   const { toggleColorScheme, colorScheme } = useMantineColorScheme();
 
+  const isLight = colorScheme === "light";
+
   return (
-    <ActionIcon
-      onClick={toggleColorScheme}
-      variant="default"
+    <Switch
+      checked={isLight}
+      onChange={toggleColorScheme}
+      color="var(--mantine-color-yellow-4)"
       size="lg"
-      aria-label="Toggle color scheme"
-    >
-      <Sun style={{ display: colorScheme === "light" ? "block" : "none" }} />
-      <Moon style={{ display: colorScheme === "dark" ? "block" : "none" }} />
-    </ActionIcon>
+      thumbIcon={
+        isLight ? (
+          <Sun size="1rem" color="var(--mantine-color-orange-filled)" />
+        ) : (
+          <Moon size="1rem" color="var(--mantine-color-dark-filled)" />
+        )
+      }
+    />
   );
 };

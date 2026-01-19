@@ -1,21 +1,22 @@
-import { useLocation, type Location } from "react-router";
 import { type ReactElement, useMemo } from "react";
 import { Logo } from "../Logo/Logo.tsx";
 import { Group } from "@mantine/core";
 import { BackButton, PageTitle } from "./TopBarUtils.tsx";
+import { useCurrentRouteId } from "../../hooks/use-current-route-id.ts";
+import { RouteId, type RouteIdType } from "../../consts/route-ids.ts";
 
 type ConfigItem = {
-  match: (location: Location) => boolean;
+  routeId: RouteIdType;
   component: () => ReactElement;
 };
 
 const config: ConfigItem[] = [
   {
-    match: (l) => l.pathname === "/",
+    routeId: RouteId.Payments,
     component: () => <Logo />,
   },
   {
-    match: (l) => l.pathname === "/new",
+    routeId: RouteId.NewPayment,
     component: () => (
       <>
         <BackButton />
@@ -24,7 +25,16 @@ const config: ConfigItem[] = [
     ),
   },
   {
-    match: (l) => l.pathname === "/friends",
+    routeId: RouteId.EditPayment,
+    component: () => (
+      <>
+        <BackButton />
+        <PageTitle>Edit Payment</PageTitle>
+      </>
+    ),
+  },
+  {
+    routeId: RouteId.Friends,
     component: () => (
       <>
         <BackButton />
@@ -33,7 +43,7 @@ const config: ConfigItem[] = [
     ),
   },
   {
-    match: (l) => l.pathname === "/settings",
+    routeId: RouteId.Settings,
     component: () => (
       <>
         <BackButton />
@@ -43,17 +53,21 @@ const config: ConfigItem[] = [
   },
 ];
 
-const getDefaultTopBar = () => <>5</>;
+const getDefaultTopBar = () => (
+  <>
+    <BackButton />
+  </>
+);
 
 export const TopBar = () => {
-  const location = useLocation();
+  const currentRouteId = useCurrentRouteId();
 
   const topBar = useMemo(() => {
-    const item = config.find((item) => item.match(location));
+    const item = config.find((item) => item.routeId === currentRouteId);
 
     if (item) return item.component();
     else return getDefaultTopBar();
-  }, [location]);
+  }, [currentRouteId]);
 
   return (
     <Group h="100%" px="md">

@@ -1,26 +1,25 @@
 import styles from "./NavigationBar.module.scss";
-import { NavLink, useLocation } from "react-router";
+import { NavLink } from "react-router";
 import { useEffect, useMemo } from "react";
 import { Text, Group } from "@mantine/core";
 import classnames from "classnames";
-import { hideNavigationBatAtPages, tabs } from "./navigation-bar-config.tsx";
+import { hideNavigationBarAtPages, tabs } from "./navigation-bar-config.tsx";
+import { useCurrentRouteId } from "../../hooks/use-current-route-id.ts";
 
 type NavigationBarProps = {
   onVisibilityChange: (isVisible: boolean) => void;
 };
 
 export const NavigationBar = ({ onVisibilityChange }: NavigationBarProps) => {
-  const location = useLocation();
+  const currentRouteId = useCurrentRouteId();
 
   const activeTabIndex = useMemo(() => {
-    return tabs.findIndex((tab) =>
-      [tab.to, ...(tab.additionalRoutes ?? [])].includes(location.pathname),
-    );
-  }, [location]);
+    return tabs.findIndex((tab) => tab.activeRouteIds.includes(currentRouteId));
+  }, [currentRouteId]);
 
   const isVisible = useMemo(
-    () => !hideNavigationBatAtPages.includes(location.pathname),
-    [location],
+    () => !hideNavigationBarAtPages.includes(currentRouteId),
+    [currentRouteId],
   );
 
   useEffect(() => {
