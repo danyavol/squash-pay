@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type PaymentFriend = {
+export type PaymentFriend = {
   friendId: number;
   multisportsNumber: number;
 };

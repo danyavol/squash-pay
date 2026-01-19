@@ -1,21 +1,28 @@
 import {
   selectActiveFriends,
   useFriendsStore,
-} from "../../state/friends-store.ts";
+} from "../../../state/friends-store.ts";
 import { useShallow } from "zustand/react/shallow";
 import styles from "./FriendsSelector.module.scss";
 import { Checkbox, Flex, Text } from "@mantine/core";
-import { useNewPaymentStore } from "../../state/new-payment-store.ts";
+import { type PaymentFriend } from "../../../state/new-payment-store.ts";
 
-export const FriendsSelector = () => {
+type FriendsSelectorProps = {
+  selectedFriends: PaymentFriend[];
+  addFriend: (friendId: number) => void;
+  removeFriend: (friendId: number) => void;
+};
+
+export const FriendsSelector = ({
+  selectedFriends,
+  addFriend,
+  removeFriend,
+}: FriendsSelectorProps) => {
   const allFriends = useFriendsStore(useShallow(selectActiveFriends));
-  const selectedFriends = useNewPaymentStore(({ friends }) => friends);
-  const removeFriend = useNewPaymentStore(({ removeFriend }) => removeFriend);
-  const addFriend = useNewPaymentStore(({ addFriend }) => addFriend);
 
   const toggleFriend = (friendId: number, newState: boolean) => {
     if (newState) {
-      addFriend({ friendId, multisportsNumber: 0 });
+      addFriend(friendId);
     } else {
       removeFriend(friendId);
     }
