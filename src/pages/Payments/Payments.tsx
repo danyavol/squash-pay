@@ -1,16 +1,11 @@
-import { Button, Flex, Stack, Paper, Group, Text } from "@mantine/core";
-import {
-  Plus,
-  Users,
-  IdCard,
-  BadgeDollarSign,
-  ChevronRight,
-} from "lucide-react";
+import { Button, Flex, Stack } from "@mantine/core";
+import { Plus } from "lucide-react";
 import { NavLink } from "react-router";
 import styles from "./Payments.module.scss";
 import { usePaymentsStore } from "../../state/payments-store.ts";
 import { useMemo } from "react";
 import { getDurationInHours } from "../../services/duration.service.ts";
+import { PaymentCard } from "./PaymentCard/PaymentCard.tsx";
 
 export const Payments = () => {
   const { payments } = usePaymentsStore();
@@ -27,7 +22,8 @@ export const Payments = () => {
           priceWithoutDiscount - multisportsNumber * p.multisportDiscount;
 
         return {
-          date: p.date,
+          id: p.id,
+          date: p.date || "",
           friendsNumber: p.friends.length,
           multisportsNumber,
           totalPrice,
@@ -45,29 +41,14 @@ export const Payments = () => {
         </Button>
       </NavLink>
       <Flex direction="column-reverse" gap="sm">
-        {mappedPayments.map((payment, index) => (
-          <Paper key={index} p="md" withBorder={true}>
-            <Group>
-              <Stack gap="xs" style={{ flexGrow: 1 }}>
-                <Text fw="600">Played on {payment.date}</Text>
-                <Group grow>
-                  <Group gap="xs">
-                    <Users size="1.25rem" color="gray" />
-                    <Text fw={600}>{payment.friendsNumber}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IdCard size="1.25rem" color="gray" />
-                    <Text fw={600}>{payment.multisportsNumber}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <BadgeDollarSign size="1.25rem" color="gray" />
-                    <Text fw={600}>{payment.totalPrice} zł</Text>
-                  </Group>
-                </Group>
-              </Stack>
-              <ChevronRight color="gray" />
-            </Group>
-          </Paper>
+        {mappedPayments.map((payment) => (
+          <NavLink
+            key={payment.id}
+            to={`/edit/${payment.id}`}
+            className={styles.link}
+          >
+            <PaymentCard payment={payment} />
+          </NavLink>
         ))}
       </Flex>
     </Stack>

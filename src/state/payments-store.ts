@@ -2,8 +2,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { PaymentData } from "./new-payment-store.ts";
 
+export type Payment = PaymentData & {
+  id: number;
+  isDeleted: boolean;
+};
+
 type PaymentsStore = {
-  payments: PaymentData[];
+  payments: Payment[];
 };
 
 export const usePaymentsStore = create<PaymentsStore>()(
