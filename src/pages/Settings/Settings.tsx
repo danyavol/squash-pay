@@ -5,8 +5,10 @@ import { useFriendsStore } from "../../state/friends-store.ts";
 import { useNewPaymentStore } from "../../state/new-payment-store.ts";
 import { usePaymentsStore } from "../../state/payments-store.ts";
 import { useSettingsStore } from "../../state/settings-store.ts";
+import { useNavigate } from "react-router";
 
 export const Settings = () => {
+  const navigate = useNavigate();
   // TODO: Display settings from settings store
 
   const resetAllStores = () => {
@@ -14,6 +16,7 @@ export const Settings = () => {
     useNewPaymentStore.persist.clearStorage();
     usePaymentsStore.persist.clearStorage();
     useSettingsStore.persist.clearStorage();
+    navigate("/");
     location.reload();
   };
 
