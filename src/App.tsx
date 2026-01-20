@@ -7,16 +7,17 @@ import { useDynamicThemeColor } from "./hooks/use-dynamic-theme-color.ts";
 
 function App() {
   const [isNavBarVisible, setIsNavBarVisible] = useState(true);
+  const [isTopBarVisible, setIsTopBarVisible] = useState(true);
   useDynamicThemeColor();
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 60, collapsed: !isTopBarVisible }}
       footer={{ height: 64, collapsed: !isNavBarVisible }}
       padding="md"
     >
       <AppShell.Header>
-        <TopBar />
+        <TopBar onVisibilityChange={setIsTopBarVisible} />
       </AppShell.Header>
       <AppShell.Main>
         <Outlet />

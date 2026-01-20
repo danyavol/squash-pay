@@ -1,0 +1,73 @@
+.posterWrapper {
+  position: relative;
+  margin: 3rem auto 0 auto;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.ball {
+  background-image: url("/poster-animation/ball.png");
+  width: 7%;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  position: absolute;
+  top: 59%;
+  left: 4%;
+
+  animation-duration: 1s;
+  animation-name: slide-in-ball;
+
+  &.frame4 {
+    transition: translate 0.5s ease;
+    translate: 5rem -14rem;
+  }
+}
+
+@keyframes slide-in-ball {
+  from {
+    translate: -30vw 10rem;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+.poster {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position-x: right;
+  background-position-y: bottom;
+
+  animation-duration: 1s;
+  animation-name: slide-in;
+
+  &.frame1 {
+    background-image: url("/poster-animation/frame1.png");
+  }
+
+  &.frame2 {
+    background-image: url("/poster-animation/frame2.png");
+  }
+
+  &.frame3 {
+    background-image: url("/poster-animation/frame3.png");
+  }
+
+  &.frame4 {
+    background-image: url("/poster-animation/frame4.png");
+  }
+}
+
+@keyframes slide-in {
+  from {
+    translate: 150vw 10rem;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}

@@ -42,4 +42,5 @@ export const tabs: Tab[] = [
 export const hideNavigationBarAtPages: RouteIdType[] = [
   RouteId.NewPayment,
   RouteId.EditPayment,
+  RouteId.ShareNewPayment,
 ];

@@ -46,22 +46,35 @@ export const NewPayment = () => {
     const splitResults = splitPayment(paymentData);
     const msg = getMessageForSharing(splitResults, friendsMap);
 
+    let shareFailed = false;
     if (isMobileDevice) {
       navigator
         .share({
           text: msg,
         })
-        .then(() => afterSave("Payment saved successfully!"))
-        .catch((e) => failedToSave(e, "Failed to share!"));
+        .catch((e) => {
+          shareFailed = true;
+          failedToShareNotification(e, "Failed to share!");
+        })
+        .finally(() => saveAndNotify("Payment saved succesfully"));
     } else {
       navigator.clipboard
         .writeText(msg)
-        .then(() => afterSave("Payment saved and copied to clipboard!"))
-        .catch((e) => failedToSave(e, "Failed to copy to clipboard!"));
+        .catch((e) => {
+          shareFailed = true;
+          failedToShareNotification(e, "Failed to copy to clipboard!");
+        })
+        .finally(() =>
+          saveAndNotify(
+            shareFailed
+              ? "Payment saved succesfully"
+              : "Payment saved and copied to clipboard!",
+          ),
+        );
     }
   };
 
-  const afterSave = (message: string) => {
+  const saveAndNotify = (message: string) => {
     notifications.show({
       message,
       color: "green",
@@ -87,7 +100,7 @@ export const NewPayment = () => {
     navigate("/");
   };
 
-  const failedToSave = (e: Error, title: string) => {
+  const failedToShareNotification = (e: Error, title: string) => {
     notifications.show({
       title,
       message: `${e?.name ? e.name + ": " : ""}${e?.message}`,
