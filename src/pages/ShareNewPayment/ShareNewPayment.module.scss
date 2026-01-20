@@ -1,7 +1,8 @@
 .posterWrapper {
   position: relative;
-  margin: 3rem auto 0 auto;
-  width: 100%;
+  margin: 5vh auto 0 auto;
+  width: min(100%, 50vh);
+  max-height: 50%;
   aspect-ratio: 1 / 1;
 }
 
@@ -18,14 +19,17 @@
   animation-name: slide-in-ball;
 
   &.frame4 {
-    transition: translate 0.5s ease;
-    translate: 5rem -14rem;
+    top: 0;
+    left: 30%;
+    transition:
+      top 0.5s ease,
+      left 0.5s ease;
   }
 }
 
 @keyframes slide-in-ball {
   from {
-    translate: -30vw 10rem;
+    translate: -150vw 10rem;
   }
 
   to {
