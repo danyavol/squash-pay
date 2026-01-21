@@ -1,8 +1,17 @@
+.shareWrapper {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
 .posterWrapper {
   position: relative;
   margin: 5vh auto 0 auto;
   width: min(100%, 50vh);
-  max-height: 50%;
+  max-height: 50vh;
   aspect-ratio: 1 / 1;
 }
 
@@ -15,7 +24,7 @@
   top: 59%;
   left: 4%;
 
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-name: slide-in-ball;
 
   &.frame4 {
@@ -46,7 +55,7 @@
   background-position-x: right;
   background-position-y: bottom;
 
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-name: slide-in;
 
   &.frame1 {
@@ -74,4 +83,29 @@
   to {
     translate: 0 0;
   }
+}
+
+$border-styles: calc(0.0625rem * var(--mantine-scale)) solid
+  var(--table-border-color);
+
+.friendsTable {
+  thead {
+    border-bottom: $border-styles;
+  }
+
+  .indexHeader {
+    width: calc(2.5rem * var(--mantine-scale));
+  }
+
+  .multisportHeader {
+    width: calc(6.75rem * var(--mantine-scale));
+  }
+
+  .priceHeader {
+    width: calc(6rem * var(--mantine-scale));
+  }
+}
+
+.overflow {
+  overflow: auto;
 }
