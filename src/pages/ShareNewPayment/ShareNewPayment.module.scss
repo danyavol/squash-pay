@@ -96,7 +96,18 @@ $border-styles: calc(0.0625rem * var(--mantine-scale)) solid
 
 .friendsTable {
   thead {
-    border-bottom: $border-styles;
+    position: sticky;
+
+    ::after {
+      z-index: 4;
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(0.0625rem * var(--mantine-scale));
+      background-color: var(--table-border-color);
+    }
   }
 
   .indexHeader {
@@ -112,6 +123,10 @@ $border-styles: calc(0.0625rem * var(--mantine-scale)) solid
   }
 }
 
-.overflow {
+.overflowHidden {
+  overflow: hidden;
+}
+
+.overflowAuto {
   overflow: auto;
 }

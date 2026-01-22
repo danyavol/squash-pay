@@ -98,7 +98,7 @@ export const ShareNewPayment = () => {
         onClick={() => navigate("/")}
       />
 
-      <Flex direction="column" className={styles.overflow}>
+      <Flex direction="column" className={styles.overflowHidden}>
         <div className={styles.posterWrapper}>
           <div
             className={classnames(styles.poster, styles["frame" + frame])}
@@ -108,7 +108,7 @@ export const ShareNewPayment = () => {
           ></div>
         </div>
 
-        <Flex m="xl" className={styles.overflow}>
+        <Flex m="xl" className={styles.overflowAuto}>
           <Table
             withRowBorders={false}
             stickyHeader
