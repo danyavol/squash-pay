@@ -3,6 +3,7 @@ import { type Payment, usePaymentsStore } from "../../state/payments-store.ts";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm.tsx";
 import type { PaymentData } from "../../state/new-payment-store.ts";
 import { useShallow } from "zustand/react/shallow";
+import { Text } from "@mantine/core";
 
 export const EditPayment = () => {
   const { paymentId = "" } = useParams();
@@ -39,6 +40,9 @@ export const EditPayment = () => {
 
   return (
     <>
+      <Text c="gray" size="xs" mb="md">
+        All changes are auto-saved
+      </Text>
       <PaymentForm formValue={payment} setFormValue={updatePayment} />
     </>
   );

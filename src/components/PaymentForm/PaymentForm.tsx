@@ -212,6 +212,7 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
                   fw="700"
                   variant="gradient"
                   gradient={{ from: "orange", to: "red", deg: 90 }}
+                  truncate="end"
                 >
                   {priceWithoutDiscount - discountValue} zł
                 </Text>

@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { usePaymentsStore } from "../../state/payments-store.ts";
-import { Button, Flex, Table } from "@mantine/core";
+import { Button, CloseButton, Flex, Table } from "@mantine/core";
 import styles from "./ShareNewPayment.module.scss";
 import classnames from "classnames";
 import { useMemo, useState } from "react";
@@ -93,6 +93,11 @@ export const ShareNewPayment = () => {
       justify="space-between"
       className={styles.shareWrapper}
     >
+      <CloseButton
+        className={styles.closeButton}
+        onClick={() => navigate("/")}
+      />
+
       <Flex direction="column" className={styles.overflow}>
         <div className={styles.posterWrapper}>
           <div

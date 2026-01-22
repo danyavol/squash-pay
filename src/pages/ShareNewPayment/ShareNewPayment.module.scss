@@ -7,6 +7,12 @@
   overflow: hidden;
 }
 
+.closeButton {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
 .posterWrapper {
   position: relative;
   margin: 5vh auto 0 auto;
