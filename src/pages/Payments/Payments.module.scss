@@ -13,7 +13,7 @@
 
 .addNewButtonWrapper {
   position: fixed;
-  bottom: 5rem;
+  bottom: calc(5rem + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
 
