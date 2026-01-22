@@ -1,5 +1,7 @@
 import { Group, Paper, Stack, Text } from "@mantine/core";
-import { BadgeDollarSign, ChevronRight, IdCard, Users } from "lucide-react";
+import { BadgeDollarSign, ChevronRight, Users } from "lucide-react";
+import styles from "./PaymentCard.module.scss";
+import classnames from "classnames";
 
 type PaymentCardProps = {
   payment: {
@@ -12,22 +14,26 @@ type PaymentCardProps = {
 
 export const PaymentCard = ({ payment }: PaymentCardProps) => {
   return (
-    <Paper p="md" withBorder={true}>
+    <Paper
+      p="md"
+      withBorder={true}
+      className={classnames("mantine-active", styles.card)}
+    >
       <Group>
         <Stack gap="xs" style={{ flexGrow: 1 }}>
           <Text fw="600">Played on {payment.date}</Text>
-          <Group grow>
-            <Group gap="xs">
-              <Users size="1.25rem" color="gray" />
-              <Text fw={600}>{payment.friendsNumber}</Text>
+          <Group>
+            <Group className={styles.iconGroup}>
+              <Users size="1.125rem" color="gray" />
+              <Text fw={500} size="sm" className={styles.friendsNumber}>
+                {payment.friendsNumber}
+              </Text>
             </Group>
-            <Group gap="xs">
-              <IdCard size="1.25rem" color="gray" />
-              <Text fw={600}>{payment.multisportsNumber}</Text>
-            </Group>
-            <Group gap="xs">
-              <BadgeDollarSign size="1.25rem" color="gray" />
-              <Text fw={600}>{payment.totalPrice} zł</Text>
+            <Group className={styles.iconGroup}>
+              <BadgeDollarSign size="1.125rem" color="gray" />
+              <Text fw={500} size="sm">
+                {payment.totalPrice} zł
+              </Text>
             </Group>
           </Group>
         </Stack>

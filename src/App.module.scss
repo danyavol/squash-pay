@@ -1,0 +1,5 @@
+.collapsedFooter {
+  --app-shell-footer-transform: translateY(
+    calc(var(--app-shell-footer-height) + env(safe-area-inset-bottom))
+  );
+}

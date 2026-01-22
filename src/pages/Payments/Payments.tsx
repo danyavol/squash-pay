@@ -1,4 +1,4 @@
-import { Button, Flex, Stack } from "@mantine/core";
+import { ActionIcon, Flex, useMantineColorScheme } from "@mantine/core";
 import { Plus } from "lucide-react";
 import { NavLink } from "react-router";
 import styles from "./Payments.module.scss";
@@ -9,6 +9,15 @@ import { PaymentCard } from "./PaymentCard/PaymentCard.tsx";
 
 export const Payments = () => {
   const { payments } = usePaymentsStore();
+  const { colorScheme } = useMantineColorScheme();
+
+  const gradient = useMemo(() => {
+    if (colorScheme === "dark") {
+      return { from: "red", to: "yellow" };
+    } else {
+      return { from: "orange", to: "yellow" };
+    }
+  }, [colorScheme]);
 
   const mappedPayments = useMemo(
     () =>
@@ -32,14 +41,8 @@ export const Payments = () => {
     [payments],
   );
 
-  // TODO: Make it clickable
   return (
-    <Stack>
-      <NavLink to="/new" className={styles.link}>
-        <Button leftSection={<Plus />} fullWidth>
-          Add new payment
-        </Button>
-      </NavLink>
+    <div className={styles.wrapper}>
       <Flex direction="column-reverse" gap="sm">
         {mappedPayments.map((payment) => (
           <NavLink
@@ -51,6 +54,17 @@ export const Payments = () => {
           </NavLink>
         ))}
       </Flex>
-    </Stack>
+      <NavLink to="/new" className={styles.addNewButtonWrapper}>
+        <ActionIcon
+          size="input-xl"
+          radius="xl"
+          gradient={{ ...gradient, deg: 105 }}
+          className={styles.addNewButton}
+          variant="gradient"
+        >
+          <Plus />
+        </ActionIcon>
+      </NavLink>
+    </div>
   );
 };
