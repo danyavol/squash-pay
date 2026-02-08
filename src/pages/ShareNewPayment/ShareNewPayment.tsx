@@ -18,6 +18,7 @@ import { useShallow } from "zustand/react/shallow";
 
 const firstFrame = 1;
 const lastFrame = 4;
+const frames = [1, 2, 3, 4];
 
 export const ShareNewPayment = () => {
   const { paymentId = "" } = useParams();
@@ -27,7 +28,7 @@ export const ShareNewPayment = () => {
   );
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
 
-  const [frame, setFrame] = useState(firstFrame);
+  const [activeFrame, setActiveFrame] = useState(firstFrame);
 
   const splitResults = useMemo(
     () => payment && splitPayment(payment),
@@ -41,7 +42,7 @@ export const ShareNewPayment = () => {
   const animate = () => {
     return new Promise((res) => {
       const intervalId = setInterval(() => {
-        setFrame((f) => {
+        setActiveFrame((f) => {
           const newFrame = f < lastFrame ? f + 1 : firstFrame;
 
           if (newFrame === lastFrame) {
@@ -100,11 +101,16 @@ export const ShareNewPayment = () => {
 
       <Flex direction="column" className={styles.overflowHidden}>
         <div className={styles.posterWrapper}>
+          {frames.map((frame) => (
+            <div
+              key={frame}
+              className={classnames(styles.poster, styles["frame" + frame], {
+                [styles.active]: frame === activeFrame,
+              })}
+            ></div>
+          ))}
           <div
-            className={classnames(styles.poster, styles["frame" + frame])}
-          ></div>
-          <div
-            className={classnames(styles.ball, styles["frame" + frame])}
+            className={classnames(styles.ball, styles["frame" + activeFrame])}
           ></div>
         </div>
 

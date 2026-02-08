@@ -63,6 +63,13 @@
 
   animation-duration: 0.5s;
   animation-name: slide-in;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  &.active {
+    opacity: 1;
+    transition: opacity 0s;
+  }
 
   &.frame1 {
     background-image: url("/poster-animation/frame1.png");
