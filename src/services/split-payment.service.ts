@@ -18,11 +18,13 @@ export function splitPayment(
     friends,
     courtPrice,
     multisportDiscount,
+    sharedDiscount,
   }: Omit<PaymentData, "date">,
   { roundPrice = true }: Options = {},
 ): SplitResult[] {
   const totalPrice = courtPrice * courtsNumber * getDurationInHours(duration);
-  const basePricePerPerson = totalPrice / friends.length;
+  const basePricePerPerson =
+    totalPrice / friends.length - sharedDiscount / friends.length;
 
   return friends.map(({ friendId, multisportsNumber }) => {
     const amount = Math.max(

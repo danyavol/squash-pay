@@ -15,7 +15,7 @@ export const useSettingsStore = create<SettingsStore>()(
       revolutUsername: "",
     }),
     {
-      name: "settings-storage",
+      name: "global-settings-storage",
     },
   ),
 );

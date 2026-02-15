@@ -18,6 +18,7 @@ export const NewPayment = () => {
     duration,
     friends,
     date,
+    sharedDiscount,
     resetValues,
   } = useNewPaymentStore();
 
@@ -28,6 +29,7 @@ export const NewPayment = () => {
     duration,
     friends,
     date,
+    sharedDiscount,
   };
 
   const save = () => {

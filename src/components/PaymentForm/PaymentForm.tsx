@@ -21,7 +21,7 @@ import styles from "./PaymentForm.module.scss";
 import { UserRoundPlus } from "lucide-react";
 import { DatePickerInput } from "@mantine/dates";
 import { FriendsSelector } from "./FriendsSelector/FriendsSelector.tsx";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { getDurationInHours } from "../../services/duration.service.ts";
 import { splitPayment } from "../../services/split-payment.service.ts";
 import {
@@ -39,6 +39,8 @@ type PaymentFormProps = {
   ) => void;
 };
 
+const ACCORDION_ITEM_ID = "1";
+
 export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
@@ -52,13 +54,14 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
     friends: selectedFriends,
     multisportDiscount,
     date,
+    sharedDiscount,
   } = formValue;
 
   const durationInHours = useMemo(() => {
     return getDurationInHours(duration);
   }, [duration]);
 
-  const priceWithoutDiscount = useMemo(() => {
+  const priceWithoutDiscounts = useMemo(() => {
     return courtPrice * courtsNumber * durationInHours;
   }, [courtPrice, courtsNumber, durationInHours]);
 
@@ -66,8 +69,8 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
     () =>
       selectedFriends.reduce((acc, f) => {
         return acc + f.multisportsNumber * multisportDiscount;
-      }, 0),
-    [selectedFriends, multisportDiscount],
+      }, 0) + sharedDiscount,
+    [selectedFriends, multisportDiscount, sharedDiscount],
   );
 
   const splitResults = useMemo(
@@ -78,9 +81,19 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
         friends: selectedFriends,
         courtPrice,
         multisportDiscount,
+        sharedDiscount,
       }),
-    [courtsNumber, duration, selectedFriends, courtPrice, multisportDiscount],
+    [
+      courtsNumber,
+      duration,
+      selectedFriends,
+      courtPrice,
+      multisportDiscount,
+      sharedDiscount,
+    ],
   );
+
+  const [accordionValue, setAccordionValue] = useState<string | null>(null);
 
   const increaseCourtsNumber = () => {
     setFormValue("courtsNumber", (currentCourts) =>
@@ -108,6 +121,8 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
     }, [] as PaymentFriend[]);
   };
 
+  const redDotDisplayed = sharedDiscount !== 0;
+
   return (
     <>
       <Flex direction="column" gap="lg" align="stretch">
@@ -133,9 +148,9 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
 
           <Group gap="xs">
             <Text c="dimmed" size="sm">
-              Price without discount:{" "}
+              Price without discounts:{" "}
             </Text>
-            <Text size="sm">{priceWithoutDiscount} zł</Text>
+            <Text size="sm">{priceWithoutDiscounts} zł</Text>
           </Group>
         </Stack>
 
@@ -214,7 +229,7 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
                   gradient={{ from: "orange", to: "red", deg: 90 }}
                   truncate="end"
                 >
-                  {priceWithoutDiscount - discountValue} zł
+                  {priceWithoutDiscounts - discountValue} zł
                 </Text>
               </Table.Td>
             </Table.Tr>
@@ -224,12 +239,18 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
         <Accordion
           variant="filled"
           chevronIconSize={14}
+          value={accordionValue}
+          onChange={setAccordionValue}
           classNames={{ control: styles.control }}
         >
-          <Accordion.Item value="1">
+          <Accordion.Item value={ACCORDION_ITEM_ID}>
             <Accordion.Control>
               <Text fw={500} size="sm" className={styles.advancedOptionsTitle}>
                 Other options
+                {/* Hide red dot if accordion expanded */}
+                {redDotDisplayed && accordionValue !== ACCORDION_ITEM_ID && (
+                  <div className={styles.redDot}></div>
+                )}
               </Text>
             </Accordion.Control>
             <Accordion.Panel>
@@ -268,6 +289,24 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
                     }
                   />
                 </Group>
+                <NumberInput
+                  label={
+                    <Text fw={500} size="sm" className={styles.inputTitle}>
+                      Shared discount
+                      {redDotDisplayed && <div className={styles.redDot}></div>}
+                    </Text>
+                  }
+                  description="Applied for all members"
+                  decimalScale={2}
+                  allowNegative={false}
+                  rightSection={"zł"}
+                  value={sharedDiscount}
+                  onChange={(value) =>
+                    setFormValue("sharedDiscount", () =>
+                      typeof value === "string" ? 0 : value,
+                    )
+                  }
+                />
               </Stack>
             </Accordion.Panel>
           </Accordion.Item>

@@ -13,6 +13,7 @@ export type PaymentData = {
   duration: string;
   friends: PaymentFriend[];
   date: string | null;
+  sharedDiscount: number;
 };
 
 export type NewPaymentStore = PaymentData & {
@@ -38,6 +39,7 @@ export const defaultNewPaymentValues = {
   duration: durationPresets[1],
   friends: [],
   date: null,
+  sharedDiscount: 0,
 };
 
 export const maxMultisports = 4;

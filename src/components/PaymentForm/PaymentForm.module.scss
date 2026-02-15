@@ -8,6 +8,8 @@
 
 .advancedOptionsTitle {
   color: var(--mantine-color-text);
+  position: relative;
+  display: inline;
 }
 
 .totalPriceText {
@@ -41,4 +43,19 @@ $border-styles: calc(0.0625rem * var(--mantine-scale)) solid
 
 .modalBody {
   padding: 0 0 var(--mantine-spacing-xs) 0;
+}
+
+.redDot {
+  position: absolute;
+  right: -14px;
+  top: 0;
+  width: 7px;
+  height: 7px;
+  background-color: var(--mantine-color-red-7);
+  border-radius: 50%;
+}
+
+.inputTitle {
+  display: inline;
+  position: relative;
 }
