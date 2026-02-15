@@ -14,6 +14,7 @@ import {
   selectFriendsMap,
   useFriendsStore,
 } from "../../state/friends-store.ts";
+import { useSettingsStore } from "../../state/settings-store.ts";
 import { useShallow } from "zustand/react/shallow";
 
 const firstFrame = 1;
@@ -27,12 +28,13 @@ export const ShareNewPayment = () => {
     state.payments.find((p) => p.id === parseInt(paymentId)),
   );
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
+  const rounding = useSettingsStore((s) => s.rounding);
 
   const [activeFrame, setActiveFrame] = useState(firstFrame);
 
   const splitResults = useMemo(
-    () => payment && splitPayment(payment),
-    [payment],
+    () => payment && splitPayment(payment, { rounding }),
+    [payment, rounding],
   );
 
   if (!payment || !splitResults) {
@@ -66,7 +68,7 @@ export const ShareNewPayment = () => {
   };
 
   const share = () => {
-    const splitResults = splitPayment(payment);
+    const splitResults = splitPayment(payment, { rounding });
     const msg = getMessageForSharing(splitResults, friendsMap);
 
     if (isMobileDevice) {

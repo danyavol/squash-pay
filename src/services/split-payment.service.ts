@@ -1,9 +1,21 @@
 import type { PaymentData } from "../state/new-payment-store.ts";
 import type { Friend } from "../state/friends-store.ts";
+import type { Rounding } from "../state/settings-store.ts";
 import { getDurationInHours } from "./duration.service.ts";
 
+function applyRounding(value: number, rounding: Rounding): number {
+  switch (rounding) {
+    case "exact":
+      return Math.round(value * 100) / 100;
+    case "round":
+      return Math.round(value);
+    case "round-up":
+      return Math.ceil(value);
+  }
+}
+
 type Options = {
-  roundPrice?: boolean;
+  rounding?: Rounding;
 };
 
 type SplitResult = {
@@ -20,7 +32,7 @@ export function splitPayment(
     multisportDiscount,
     sharedDiscount,
   }: Omit<PaymentData, "date">,
-  { roundPrice = true }: Options = {},
+  { rounding = "round-up" }: Options = {},
 ): SplitResult[] {
   const totalPrice = courtPrice * courtsNumber * getDurationInHours(duration);
   const basePricePerPerson =
@@ -34,7 +46,7 @@ export function splitPayment(
 
     return {
       friendId,
-      amount: roundPrice ? Math.ceil(amount) : Math.round(amount * 100) / 100,
+      amount: applyRounding(amount, rounding),
     };
   });
 }

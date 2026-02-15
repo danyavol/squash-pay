@@ -1,18 +1,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export type Rounding = "exact" | "round" | "round-up";
+
 type SettingsStore = {
-  rounding: "exact" | "round" | "round-up";
-  blikNumber: string;
-  revolutUsername: string;
+  rounding: Rounding;
+  setRounding: (rounding: Rounding) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>()(
   persist(
-    (_set) => ({
+    (set) => ({
       rounding: "exact",
-      blikNumber: "",
-      revolutUsername: "",
+      setRounding: (rounding) => set({ rounding }),
     }),
     {
       name: "global-settings-storage",

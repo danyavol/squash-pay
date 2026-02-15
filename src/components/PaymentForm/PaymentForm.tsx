@@ -28,6 +28,7 @@ import {
   selectFriendsMap,
   useFriendsStore,
 } from "../../state/friends-store.ts";
+import { useSettingsStore } from "../../state/settings-store.ts";
 import { useDisclosure } from "@mantine/hooks";
 import { useShallow } from "zustand/react/shallow";
 
@@ -46,6 +47,7 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
     useDisclosure(false);
 
   const friendsMap = useFriendsStore(useShallow(selectFriendsMap));
+  const rounding = useSettingsStore((s) => s.rounding);
 
   const {
     courtPrice,
@@ -75,14 +77,17 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
 
   const splitResults = useMemo(
     () =>
-      splitPayment({
-        courtsNumber,
-        duration,
-        friends: selectedFriends,
-        courtPrice,
-        multisportDiscount,
-        sharedDiscount,
-      }),
+      splitPayment(
+        {
+          courtsNumber,
+          duration,
+          friends: selectedFriends,
+          courtPrice,
+          multisportDiscount,
+          sharedDiscount,
+        },
+        { rounding },
+      ),
     [
       courtsNumber,
       duration,
@@ -90,6 +95,7 @@ export const PaymentForm = ({ formValue, setFormValue }: PaymentFormProps) => {
       courtPrice,
       multisportDiscount,
       sharedDiscount,
+      rounding,
     ],
   );
 

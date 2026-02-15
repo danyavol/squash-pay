@@ -1,4 +1,4 @@
-import { Stack, Button, Text, Flex, Divider } from "@mantine/core";
+import { Stack, Button, Text, Flex, Divider, Select } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Trash2 } from "lucide-react";
 import { ColorSchemeSwitcher } from "../../components/ColorSchemeSwitcher.tsx";
@@ -7,13 +7,26 @@ import { useFriendsStore } from "../../state/friends-store.ts";
 import { useNewPaymentStore } from "../../state/new-payment-store.ts";
 import { usePaymentsStore } from "../../state/payments-store.ts";
 import { useSettingsStore } from "../../state/settings-store.ts";
+import type { Rounding } from "../../state/settings-store.ts";
 import { useNavigate } from "react-router";
+
+const roundingOptions = [
+  { value: "exact", label: "Exact" },
+  { value: "round", label: "Round" },
+  { value: "round-up", label: "Round up" },
+] satisfies { value: Rounding; label: string }[];
+
+const roundingDescription = {
+  exact: "10.33 zł → 10.33 zł",
+  round: "10.33 zł → 10 zł",
+  "round-up": "10.33 zł → 11 zł",
+} satisfies Record<Rounding, string>;
 
 export const Settings = () => {
   const navigate = useNavigate();
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
-  // TODO: Display settings from settings store
+  const { rounding, setRounding } = useSettingsStore();
 
   const resetAllStores = () => {
     useFriendsStore.persist.clearStorage();
@@ -33,6 +46,15 @@ export const Settings = () => {
           </Text>
           <ColorSchemeSwitcher />
         </Flex>
+
+        <Select
+          label="Prices rounding"
+          description={roundingDescription[rounding]}
+          data={roundingOptions}
+          value={rounding}
+          onChange={(value) => value && setRounding(value as Rounding)}
+          allowDeselect={false}
+        />
 
         <Divider />
 
